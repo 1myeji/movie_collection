@@ -9,19 +9,26 @@
     const html = document.querySelector('html')
     let page = 1
 
-    // $(window).load(function() {
-    //   $('.loader').delay('3000').fadeout()
-    // })
     // 로딩 중
-    html.style.overflow = 'hidden' // 로딩 중 스크롤 방지
-    window.addEventListener('load', () => {
-      loaderEl.style.opacity = '0'
-      html.style.overflow = 'auto' //스크롤 방지 해제
-      setTimeout(() => {
-        loaderEl.style.display = 'none'
-      }, 400)
-    })
+    // html.style.overflow = 'hidden' // 로딩 중 스크롤 방지
+    // function loading () {
+    //   window.addEventListener('load', () => {
+    //     loaderEl.classList.remove('hide')
+    //     loaderEl.style.opacity = '1'
+  
+    //     html.style.overflow = 'auto' //스크롤 방지 해제
+    //     setTimeout(() => {
+    //       loaderEl.style.display = 'none'
+    //     }, 400)
+    //   })
+    // }
 
+    window.onbeforeunload = function () {
+      loaderEl.classList.remove('hide')
+    }
+    window.addEventListener('load', () => {
+      loaderEl.classList.add('hide')
+    })
 
     // 최초 호출!
     // SEARCH 버튼 클릭 시
@@ -29,7 +36,7 @@
       selectEl.addEventListener('select', async () => {
         findMovies()
       })
-      findMovies()      
+      findMovies()  
     }) 
 
     // input, ENTER 누르면
@@ -50,8 +57,15 @@
       }      
       year = selectEl.value
       title = inputEl.value
+      // 로딩바
+      loaderEl.classList.remove('hide')
       const movies = await getMovies(title, page, year)
-      renderMovies(movies)
+      if(movies !== undefined) {
+        renderMovies(movies)
+        loaderEl.classList.add('hide') 
+      } else {
+        loaderEl.classList.add('hide') 
+      }
     }
 
     async function getMovies(title, page = 1, year) {
