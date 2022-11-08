@@ -1,10 +1,10 @@
 /* font */
-@font-face {
+/* @font-face {
   font-family: 'ghanachoco';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ghanachoco.woff') format('woff');
   font-weight: normal;
   font-style: normal;
-}
+} */
 @font-face {
   font-family: 'GmarketSansMedium';
   src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
@@ -56,13 +56,12 @@ div.loader {
   display: none;
 }
 
-
 section {
 
 }
 section div.container {
   width: 1000px;
-  height: 100vh;
+  /* height: 100vh; */
   margin-top: 200px;
   margin-right: auto;
   margin-left: auto;
@@ -71,7 +70,7 @@ section div.container .title {
   
 }
 section div.container .title h1 {
-  font-family: 'ghanachoco', sans-serif;
+  /* font-family: 'ghanachoco', sans-serif; */
   color: #fff;
   font-size: 100px;
   text-align: center;
@@ -151,3 +150,4 @@ div.movies .movie .info h2 {
 div.movies .movie .info h1 {
  
 }
+

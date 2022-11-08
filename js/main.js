@@ -1,27 +1,16 @@
 ;(async () => {
   // 초기화 코드들~
     const moviesEl = document.querySelector('.movies')
-    const moreBtnEl = document.querySelector('.btn')
+    const movieEl = document.querySelector('.movie')
+    const moreBtnEl = document.querySelector('.morebtn')
     const inputEl = document.querySelector('.movietitle')
     const searchBtnEl = document.querySelector('.searchbtn')
     const selectEl = document.querySelector('.form-select')
     const loaderEl = document.querySelector('.loader')
     const html = document.querySelector('html')
     let page = 1
-
-    // 로딩 중
-    // html.style.overflow = 'hidden' // 로딩 중 스크롤 방지
-    // function loading () {
-    //   window.addEventListener('load', () => {
-    //     loaderEl.classList.remove('hide')
-    //     loaderEl.style.opacity = '1'
-  
-    //     html.style.overflow = 'auto' //스크롤 방지 해제
-    //     setTimeout(() => {
-    //       loaderEl.style.display = 'none'
-    //     }, 400)
-    //   })
-    // }
+    let year
+    let title
 
     window.onbeforeunload = function () {
       loaderEl.classList.remove('hide')
@@ -33,6 +22,7 @@
     // 최초 호출!
     // SEARCH 버튼 클릭 시
     searchBtnEl.addEventListener('click', async () => {
+      page = 1
       selectEl.addEventListener('select', async () => {
         findMovies()
       })
@@ -41,6 +31,7 @@
 
     // input, ENTER 누르면
     inputEl.addEventListener('keypress', async (e) => {
+      page = 1
       if(e.key === 'Enter') {
         selectEl.addEventListener('select', async () => {
           findMovies()
@@ -51,7 +42,7 @@
       }
     })
     
-    async function findMovies (year) {
+    async function findMovies () {
       if(moviesEl.innerHTML !== '') {
         moviesEl.innerHTML = ''
       }      
@@ -68,7 +59,7 @@
       }
     }
 
-    async function getMovies(title, page = 1, year) {
+    async function getMovies(title, page, year) {
       const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}&page=${page}&y=${year}`)
       const { Search: movies } = await res.json()
       console.log(movies)
@@ -91,6 +82,7 @@
         el.append(imgEl, divEl)
         moviesEl.append(el)
       }
+      lastSection.classList.remove('hide')
     }
 
     // 제목 길면 ... 처리
@@ -100,4 +92,18 @@
       }
       return txt;
     }
+
+    // 무한스크롤
+    let lastSection = document.querySelector('.lastsection')
+    const io = new IntersectionObserver ((entries) => {
+      if(entries[0].isIntersecting) {
+        setTimeout(async () => {
+          page += 1
+          const movies = await getMovies(title, page, year)
+          renderMovies(movies)
+        }, 400)
+      }
+    })
+    io.observe(lastSection)
 })()
+
