@@ -1,17 +1,18 @@
 ;(async () => {
-  // 초기화 코드들~
+    // 초기화 코드들~
     const moviesEl = document.querySelector('.movies')
     const movieEl = document.querySelector('.movie')
-    const moreBtnEl = document.querySelector('.morebtn')
     const inputEl = document.querySelector('.movietitle')
     const searchBtnEl = document.querySelector('.searchbtn')
     const selectEl = document.querySelector('.form-select')
     const loaderEl = document.querySelector('.loader')
-    const html = document.querySelector('html')
+    let lastSection = document.querySelector('.lastsection')
     let page = 1
     let year
     let title
+    let id
 
+    // 새로고침시 로딩바
     window.onbeforeunload = function () {
       loaderEl.classList.remove('hide')
     }
@@ -50,7 +51,8 @@
       title = inputEl.value
       // 로딩바
       loaderEl.classList.remove('hide')
-      const movies = await getMovies(title, page, year)
+      const movies = await getMovies(title, page, year, id)
+      // 검색했는데 결과가 없다면 로딩바 숨기기
       if(movies !== undefined) {
         renderMovies(movies)
         loaderEl.classList.add('hide') 
@@ -58,20 +60,63 @@
         loaderEl.classList.add('hide') 
       }
     }
+    
+    // 상세페이지
+    // movieEl.addEventListener('click', () => {
+    //   func()
+    // })
 
-    async function getMovies(title, page, year) {
-      const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}&page=${page}&y=${year}`)
+    // async function func (movies) {
+    //   for (let i = 0; i < page * 8; i++) {
+    //     if (document.querySelector('.movie: nth-child(i + 1)').addEventListener('click', () => {
+    //       id = movies[i].imdbID 
+    //     })) {
+    //     }
+    //   }
+    //   const datas = await getMovie(id)
+    //   detailMovies(datas)
+    // }
+
+    // async function getMovie(id) {
+    //   const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&i=${id}&plot=full`)
+    //   const datas = await res.json()
+    //   console.log(datas)
+    //   return datas
+    // }
+    // function detailMovies (datas) {
+    //   for(const data of datas) {
+    //     const imgEl = document.createElement('img')
+    //     imgEl.src = data.Poster
+    //     const divEl = document.createElement('div')
+    //     divEl.classList.add('detail')
+    //     const titleEl = document.createElement('h1')
+    //     titleEl.textContent = data.Title
+    //     const releasedEl = document.createElement('p')
+    //     releasedEl.textContent = data.Released
+    //     releasedEl.textContent = data.Runtime
+    //     releasedEl.textContent = data.Country
+    //     divEl.append(titleEl, releasedEl)
+    //     moviesEl.append(imgEl, divEl)
+    //   }
+    // }
+    // 상세페이지 끝
+
+    async function getMovies(title, page, year, id) {
+      lastSection.classList.add('hide')
+      const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}&page=${page}&y=${year}&i=${id}`)
       const { Search: movies } = await res.json()
       console.log(movies)
       return movies
     }
-    
+
     function renderMovies (movies) {
       for(const movie of movies) {
         const el = document.createElement('div')
         el.classList.add('movie')
         const imgEl = document.createElement('img')
         imgEl.src = movie.Poster
+        // 대체 이미지
+        imgEl.setAttribute('onerror', "this.src='https://st4.depositphotos.com/14953852/24787/v/600/depositphotos_247872612-stock-illustration-no-image-available-icon-vector.jpg'")
         const divEl = document.createElement('div')
         divEl.classList.add('info')
         const yearEl = document.createElement('h2')
@@ -94,14 +139,19 @@
     }
 
     // 무한스크롤
-    let lastSection = document.querySelector('.lastsection')
     const io = new IntersectionObserver ((entries) => {
       if(entries[0].isIntersecting) {
         setTimeout(async () => {
           page += 1
-          const movies = await getMovies(title, page, year)
-          renderMovies(movies)
-        }, 400)
+          loaderEl.classList.remove('hide')
+          const movies = await getMovies(title, page, year, id)
+          if(movies !== undefined) {
+            renderMovies(movies)
+            loaderEl.classList.add('hide') 
+          } else {
+            loaderEl.classList.add('hide') 
+          }
+        }, 200)
       }
     })
     io.observe(lastSection)
