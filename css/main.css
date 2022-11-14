@@ -1,13 +1,7 @@
 /* font */
-/* @font-face {
-  font-family: 'ghanachoco';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_20-04@1.0/ghanachoco.woff') format('woff');
-  font-weight: normal;
-  font-style: normal;
-} */
 @font-face {
-  font-family: 'GmarketSansMedium';
-  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2001@1.1/GmarketSansMedium.woff') format('woff');
+  font-family: 'PuradakGentleGothicR';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_11-01@1.1/PuradakGentleGothicR.woff2') format('woff2');
   font-weight: normal;
   font-style: normal;
 }
@@ -18,13 +12,8 @@ body {
   font-size: 16px;
   font-weight: 400;
   line-height: 1.4;
-  font-family: 'GmarketSansMedium', sans-serif;
-  background-color: #3498db;
-  background-image: url('https://www.10wallpaper.com/wallpaper/2560x1600/1110/Disney_movie_WALL-E_Wallpaper_2560x1600.jpg');
-  background-repeat: no-repeat;
-  background-position: bottom;
-  background-size: cover;
-  background-attachment: fixed;
+  font-family: 'PuradakGentleGothicR', sans-serif;
+  background-color: #353535;
 }
 img {
   display: block;
@@ -34,10 +23,9 @@ a {
 }
 
 /* STYLE */
-/* 로딩 애니메이션 */
 div.loader {
   border: 16px solid #f3f3f3;
-  border-top: 16px solid #3498db;
+  border-top: 16px solid slategray;
   border-radius: 50%;
   width: 120px;
   height: 120px;
@@ -52,81 +40,86 @@ div.loader {
   0% {transform:translate(-50%, -50%) rotate(0deg);}
   100%{transform:translate(-50%, -50%) rotate(360deg);}
 }
-
-.hide {
-  display: none;
+header {
+  width: 900px;
+  margin: 0px auto;
+  margin-top: 30px;
+  margin-bottom: 20px;
+  padding-left: 15px;
 }
-
-section {
-
+header a {
+  display: flex;
+  align-items: center;
 }
-section div.container {
-  width: 1000px;
-  /* height: 100vh; */
-  margin-top: 200px;
-  margin-right: auto;
-  margin-left: auto;
-}
-section div.container .title {
-  
-}
-section div.container .title h1 {
-  /* font-family: 'ghanachoco', sans-serif; */
-  color: #fff;
-  font-size: 100px;
-  text-align: center;
-}
-section div.container .search-box {
-  width: 100%;
+header img {
+  width: 90px;
   height: 70px;
-  margin: 0 auto;
+  cursor: pointer;
+}
+header h1 {
+  margin-left: 10px;
+  color: #fff;
+  font-size: 30px;
+  cursor: pointer;
+}
+.search-box {
+  width: 900px;
+  height: 70px;
+  margin: 0px auto;
   text-align: center;
   position: relative;
 }
-section div.container .search-box input {
-  width: 700px;
-  height: 60px; 
+section .search-box input {
+  width: 500px;
+  height: 40px; 
+  margin-left: -90px;
   padding-left: 20px;
-  border-radius: 100px;
-  border: 0px;
-  font-family: 'GmarketSansMedium', sans-serif;
-  font-size: 15px;
+  border-radius: 7px;
+  font-size: 17px;
 }
-section div.container .search-box select {
-  height: 60px;
-  font-family: 'GmarketSansMedium', sans-serif;
-  border-radius: 10px;
-  border: 0px;
+section .search-box select {
+  height: 42px;
+  border-radius: 7px;
   padding: 0px 10px;
   cursor: pointer;
 }
-section div.container .search-box select option {
-
-}
-section div.container .search-box button {
+section .search-box button {
   width: 100px;
-  height: 60px;
-  font-family: 'GmarketSansMedium', sans-serif;
-  border-radius: 10px;
-  border: 0px;
+  height: 44px;
+  border-radius: 7px;
   cursor: pointer;
 }
-
+div.inner {
+  width: 900px;
+  margin: 0 auto;
+  background-color: #e9ecef;
+  border-radius: 5px;
+  text-align: center;
+  padding: 40px 0;
+}
+div.inner p {
+  margin-top: 10px;
+  color: darkgrey;
+}
 div.movies {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 10px;
-  padding: 50px 10px;
+  gap: 7px;
+  padding: 10px 10px;
 }
 div.movies .movie {
-  --size: 220px;
+  --size: 180px;
   width: var(--size);
   height: calc(var(--size) * 3 / 2);
   position: relative;
   overflow: hidden;
   border-radius: 10px;
   cursor: pointer;
+}
+div.movies .movie:hover img {
+  transition: all 0.2s linear;
+  transform: scale(1.1);
 }
 div.movies .movie img {
   width: 100%;
@@ -151,4 +144,9 @@ div.movies .movie .info h2 {
 div.movies .movie .info h1 {
  
 }
-
+div.lastsection {
+  
+}
+.hide {
+  display: none;
+}
