@@ -8,11 +8,13 @@
   const selectEl = document.querySelector('.form-select')
   const loaderEl = document.querySelector('.loader')
   const contentEl = document.querySelector('.inner__content')
-  let lastSection = document.querySelector('.lastsection')
+  const lastSection = document.querySelector('.lastsection')
+  const morebtnEl = document.querySelector('.morebtn')
   let page
   let year
   let title
   let id
+
   // 새로고침시 로딩바
   window.onbeforeunload = function () {
     loaderEl.classList.remove('hide')
@@ -20,7 +22,22 @@
   window.addEventListener('load', () => {
     loaderEl.classList.add('hide')
   })
-  
+
+  let num
+  morebtnEl.addEventListener('click', async () => {
+    num++
+    page++
+    const movies = await getMovies(title, page, year, id)
+    if(movies == undefined) {
+      morebtnEl.classList.add('hide') 
+      morebtnEl.classList.add('hide')
+    } else {
+      renderMovies(movies)
+      countMovies()
+    }
+    morebtnEl.classList.add('hide')
+  })
+
   // SEARCH 버튼 클릭 시
   searchBtnEl.addEventListener('click', async () => {
     page = 1
@@ -36,7 +53,7 @@
   })
   
   async function findMovies () {
-    contentEl.classList.add('hide')
+    num = 1
     if(moviesEl.innerHTML !== '') {
       moviesEl.innerHTML = ''
     }      
@@ -44,31 +61,25 @@
     title = inputEl.value
     if(inputEl.value === '') {
       alert('제목을 입력하세요!')
+      contentEl.classList.remove('hide')
+      morebtnEl.classList.add('hide')
     } else {
       loaderEl.classList.remove('hide')
       const movies = await getMovies(title, page, year, id)
+      contentEl.classList.add('hide')
       if(movies !== undefined) {
         renderMovies(movies)
         loaderEl.classList.add('hide') 
+        morebtnEl.classList.remove('hide')
       } else {
         loaderEl.classList.add('hide') 
-        alert('결과없음')
+        morebtnEl.classList.add('hide')
       }
     }
-    if(countEl.value == 20) {
-      const movies = await getMovies(title, page + 1, year, id)
-      renderMovies(movies)
-    }
-    if(countEl.value == 30) {
-      let movies = await getMovies(title, page + 1, year, id)
-      renderMovies(movies)
-      movies = await getMovies(title, page + 2, year, id)
-      renderMovies(movies)
-    }
+    countMovies()
   }
 
   async function getMovies(title, page, year, id) {
-    lastSection.classList.add('hide')
     const res = await fetch(`https://omdbapi.com/?apikey=7035c60c&s=${title}&page=${page}&y=${year}&i=${id}`)
     const { Search: movies } = await res.json()
     console.log(movies)
@@ -96,6 +107,22 @@
     lastSection.classList.remove('hide')
   }
 
+  async function countMovies () {
+    if(countEl.value == 20) {
+      page++
+      const movies = await getMovies(title, page, year, id)
+      movies == undefined? morebtnEl.classList.add('hide') : renderMovies(movies)
+    }
+    if(countEl.value == 30) {
+      page++
+      let movies = await getMovies(title, page, year, id)
+      movies == undefined? morebtnEl.classList.add('hide') : renderMovies(movies)
+      page++
+      movies = await getMovies(title, page, year, id)
+      movies == undefined? morebtnEl.classList.add('hide') : renderMovies(movies)
+    }
+  }
+
   // 제목 길면 ... 처리
   function textLengthOverCut(txt, len = 15, lastTxt = "...") {
     if (txt.length > len) {
@@ -106,7 +133,7 @@
 
   // 무한스크롤
   const io = new IntersectionObserver ((entries) => {
-    if(entries[0].isIntersecting) {
+    if(entries[0].isIntersecting && num == 2) {
       setTimeout(async () => {
         page += 1
         loaderEl.classList.remove('hide')
@@ -122,16 +149,7 @@
             loaderEl.classList.add('hide') 
           }
         }
-        if(countEl.value == 20) {
-          const movies = await getMovies(title, page + 1, year, id)
-          renderMovies(movies)
-        }
-        if(countEl.value == 30) {
-          let movies = await getMovies(title, page + 1, year, id)
-          renderMovies(movies)
-          movies = await getMovies(title, page + 2, year, id)
-          renderMovies(movies)
-        }
+        countMovies()
       }, 200)
     }
   })
